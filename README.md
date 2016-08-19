@@ -9,18 +9,23 @@
 - [Todo](#todo)
 
 ## Install
-1. os
+*. os
+
 	centos-release-6-6.el6.centos.12.2.x86_64
-2. tomcat
+*. 톰켓
 	 
--- tomcat download
+-- 톰켓 다운로드
 
 ```sh
 #cd /opt
 #mkdir tomcat
 #wget http://mirror.apache-kr.org/tomcat/tomcat-8/v8.0.24/bin/apache-tomcat-8.0.24.zip
+```
 
--- tomcat connector download
+
+-- 컨넥터 다운로드
+
+```sh 
 #wget http://apache.tt.co.kr/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.40-src.tar.gz
 # gunzip  tomcat-connectors-1.2.40-src.tar.gz
 # tar -xvf tomcat-connectors-1.2.40-src.tar
@@ -41,7 +46,7 @@
         
 Include conf.d/*.conf
 Include /opt/tomcat/tomcat-connectors-1.2.40-src/conf/httpd-jk.conf ==>추가
-
+ 
 
  ## vi /opt/tomcat/tomcat-connectors-1.2.40-src/conf/httpd-jk.conf 
     
@@ -105,8 +110,6 @@ Include /opt/tomcat/tomcat-connectors-1.2.40-src/conf/httpd-jk.conf ==>추가
   	#chkconfig --add tomcat
   	#service tomcat restart
   	 
-```sh
-$ npm install mysql
 ```
 
 For information about the previous 0.9.x releases, visit the [v0.9 branch][].
