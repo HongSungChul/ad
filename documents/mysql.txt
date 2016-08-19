@@ -1,4 +1,4 @@
-5==> mysql 데이타 베이스 생서 
+5==> mysql 데이타 베이스 생성  
 
 	#mysql
 	#create database bada0303

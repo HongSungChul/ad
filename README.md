@@ -7,6 +7,8 @@
 - [소개](#소개)
 - [기능정의](#기능정의)
 - [프로세스](#프로세스)
+- [ERD](#ERD)
+- [API](#API)
 - [Todo](#todo)
 
 ## 설치
@@ -131,9 +133,9 @@ grant all privileges on brandbox.* to brandbox@'%' identified by 'qmfosemqkrtm' 
 ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
 
 ```
-[브랜드박스 스키마 생성](./brandbox.sql)
+[브랜드박스 스키마 생성](./documents/brandbox.sql)
 
-[브랜드박스 초기데이타 생성](./brandbox_data.sql)
+[브랜드박스 초기데이타 생성](./documents/brandbox_data.sql)
 
 4. 자바
 
@@ -219,7 +221,7 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
 	등록한 매체 선택
 	사이즈 형태(100*300,100*200) 
 	광고코드 생성
-	<script src='http://brandbox.co.kr/[매체코드]/[키워드]'></script>
+	<script src='http://도메인/[매체코드]/[키워드]'></script>
 -레포트
 	매체별 일별 노출수,클릭수,수익을 보여준다.
 -정산
@@ -282,7 +284,7 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
 
 광고노출과정 
 
-	-매체사가 할당한 광고단위코드(ex)<script src='http://brandbox.co.kr/[광고단위코드]/[키워드]'></script>) 를 페이지에 삽입한다.
+	-매체사가 할당한 광고단위코드(ex)<script src='http://도메인명/[광고단위코드]/[키워드]'></script>) 를 페이지에 삽입한다.
 	-광고단위코드,키워드를가지고 @광고집행에서 광고를 선택한다.
 	-키워드 매핑이 안되어 있을경우 -- 아예보여주지 않는다. - 로그도 필요없음.
 	-브랜드/분류 가 중복등록시 랜덤하게 선택한다.
@@ -411,8 +413,8 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
    6. 광고단위 생성
    	  서비스일련번호 선택,광고크기(2가지),이름,회원코드,등록일,수정일로 입력
    	  
-   	  @서비스.$광고휴형이 서치일경우 <script src='http://brandbox.co.kr/[광고단위코드]/[키워드]'><script>
-   	  @서비스.$광고휴형이 매칭일경우 <script src='http://brandbox.co.kr/[광고단위코드]'><script>
+   	  @서비스.$광고휴형이 서치일경우 <script src='http://도메인명/[광고단위코드]/[키워드]'><script>
+   	  @서비스.$광고휴형이 매칭일경우 <script src='http://도메인명/[광고단위코드]'><script>
    
    7. 광고주 가입(회원소속을 '광고주' 로)
       회원아이디(*),패스워드(*), 회원소속(매체/광고주/대행사)(*),사업자번호,연락처(*),이메일(*),상호,예치금(*),보너스(*),등록일 로 가입
@@ -498,7 +500,13 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
 			   	
 
 ```
+## ERD
 
+	[ERD](./documents/erd.pdf)
+  
+## API  
+
+	[API](./doc/index.html)
 ## Todo
 
 * mysql를 몽고디비로 포팅 
