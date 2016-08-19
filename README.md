@@ -507,7 +507,7 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
   
 ## API  
 
-[API](./doc/index.html)
+[API](https://htmlpreview.github.io/?https://github.com/HongSungChul/ad/blob/master/doc/index.html)
 
 ## Todo
 
