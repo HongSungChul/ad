@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbagix.ad.mapper.MemberMapper">
+		
+    <!-- /////////////bubble////////// -->
+    <insert id="addMember" parameterType="map" useGeneratedKeys="true" keyProperty="memberSq">
+        INSERT INTO member
+		(
+		  userid,
+		  passwd,
+		  kind,
+		  phone,
+		  email,
+		  companyName,
+		  point,
+		  regDate,
+		  modDate,
+		  profit,
+		  name,
+		  status,
+		  hp,
+		  adPoint
+		)
+		VALUES
+		(
+			#{userid},
+		  #{passwd},
+		  #{kind},
+		  #{phone},
+		  #{email},
+		  #{companyName},
+		  0,
+		  now(),
+		  now(),
+		  #{profit},
+		  #{name},
+		  #{status},
+		  #{hp},
+		  0
+		)
+
+		
+	</insert>
+		
+    <select id="getTotalMember" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   member where 1=1
+         <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" kind != null and kind != '' ">
+        	and kind=#{kind}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+    </select>
+    
+    
+    <select id="getAllMember" parameterType="map" resultType="map">
+         select 
+        	*  from member A
+		where 1=1
+        <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" kind != null and kind != '' ">
+        	and kind=#{kind}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+			order by A.memberSq desc
+		<if test=" start != null and start != '' ">
+       		limit #{start} ,#{length}
+      	 </if>
+    </select>
+ 	<select id="getAllCompanyName" parameterType="map" resultType="map">
+        SELECT  companyName,memberSq,userid
+        FROM   member A
+		where
+			memberSq in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+      		 #{item.memberSq}
+     	</foreach>
+    
+    </select>	
+    <select id="getMember" resultType="map" parameterType="java.lang.Integer">
+        select 
+        	* from member
+        WHERE   memberSq = #{value}
+         
+    </select>
+     
+   <select id="findByUserid" resultType="com.mbagix.ad.model.Member" parameterType="java.lang.String">
+        select 
+        	* from member
+        WHERE   userid = #{value}
+         
+    </select>
+    
+     
+    <update id="updateMember" parameterType="map">
+        UPDATE member
+		SET
+		  passwd=#{passwd},
+		  phone=#{phone},
+		  email=#{email},
+		  companyName=#{companyName},
+		  modDate=now(),
+		  profit=#{profit},
+		  name=#{name},
+		  status=#{status},
+		  hp=#{hp}
+        WHERE  memberSq = #{memberSq}
+        	
+    </update>
+     
+    
+    <delete id="deleteMember" parameterType="java.lang.Integer">
+        update member set status='B'  
+        WHERE  memberSq = ${value}
+    </delete>
+    
+    
+</mapper>

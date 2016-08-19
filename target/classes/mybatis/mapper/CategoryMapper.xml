@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbagix.ad.mapper.CategoryMapper">
+		
+    <!-- /////////////ad_info////////// -->
+    <insert id="addCg1" parameterType="map" useGeneratedKeys="true" keyProperty="cg1Sq">
+        INSERT INTO cg1
+		(
+		 name,
+		 sortOrder,
+		 regDate,
+		 modDate,
+		 status
+		)
+		VALUES
+		(
+		 #{name},
+		 #{sortOrder},
+		 now(),
+		 now(),
+	 	 #{status}
+		)
+
+		
+	</insert>
+		
+    <select id="getTotalCg1" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   cg1 where 1=1
+         <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" cg1Sq != null and cg1Sq != '' ">
+        	and cg1Sq=#{cg1Sq}
+        </if>
+       
+    </select>
+    
+    
+    <select id="getAllCg1" parameterType="map" resultType="map">
+         select 
+        	*  from cg1 A
+		where 1=1
+        <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" cg1Sq != null and cg1Sq != '' ">
+        	and cg1Sq=#{cg1Sq}
+        </if>
+        
+			order by A.sortOrder asc
+		<if test=" start != null and start != '' ">
+       		limit ${start} ,${length}
+      	 </if>
+    </select>
+ 
+    <select id="getCg1" resultType="map" parameterType="map">
+        select 
+        	* from cg1
+        WHERE   cg1Sq = #{cg1Sq}
+       
+         
+    </select>
+     
+    <update id="updateCg1" parameterType="map">
+        UPDATE cg1
+		SET
+		  name = #{name},
+		 sortOrder= #{sortOrder},
+		 status=#{status},
+		 modDate=now()
+        WHERE  cg1Sq = #{cg1Sq}
+        
+    </update>
+    <update id="upCg1" parameterType="map">
+        UPDATE cg1
+		SET
+		  sortOrder= sortOrder+1
+        WHERE  sortOrder >= #{sortOrder}
+        
+        
+    </update>
+    
+    <delete id="deleteCg1" parameterType="map">
+        delete from  cg1 WHERE  cg1Sq = #{cg1Sq}
+        
+    </delete>
+    
+    <!-- /////////////adm_req////////// -->
+    <insert id="addCg2" parameterType="map" useGeneratedKeys="true" keyProperty="cg2Sq">
+        INSERT INTO cg2
+		(
+		 name,
+		 sortOrder,
+		 regDate,
+		 modDate,
+		 status,
+		 cg1Sq
+		)
+		VALUES
+		(
+		 #{name},
+		 #{sortOrder},
+		 now(),
+		 now(),
+	 	 #{status},
+	 	 #{cg1Sq}
+		)
+
+		
+	</insert>
+		
+    <select id="getTotalCg2" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   cg2 where 1=1
+         <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" cg2Sq != null and cg2Sq != '' ">
+        	and cg2Sq=#{cg2Sq}
+        </if>
+        
+    </select>
+    
+    
+    <select id="getAllCg2" parameterType="map" resultType="map">
+         select 
+        	*  from cg2 A
+		where 1=1
+        <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" cg1Sq != null and cg1Sq != '' ">
+        	and cg1Sq=#{cg1Sq}
+        </if>
+       
+			order by A.sortOrder asc
+		<if test=" start != null and start != null ">
+       		limit ${start} ,${length}
+      	 </if>
+    </select>
+ 
+    <select id="getCg2" resultType="map" parameterType="map">
+        select 
+        	* from cg2
+        WHERE   cg2Sq = #{cg2Sq}
+        
+         
+    </select>
+     
+    <update id="updateCg2" parameterType="map">
+        UPDATE cg2
+		SET
+		 	name = #{name},
+		 sortOrder= #{sortOrder},
+		 status=#{status},
+		 modDate=now()
+        WHERE  cg2Sq = #{cg2Sq}
+        
+        
+    </update>
+     
+    
+    <delete id="deleteCg2" parameterType="map">
+        delete from cg2 WHERE  cg2Sq = #{cg2Sq}
+        
+    </delete>
+    <update id="upCg2" parameterType="map">
+        UPDATE cg2
+		SET
+		  sortOrder= sortOrder+1
+        WHERE  sortOrder >= #{sortOrder}
+        	and cg1Sq=#{cg1Sq}
+        
+        
+    </update>
+</mapper>

@@ -1,0 +1,10 @@
+
+외부아이피:
+http://125.209.200.159:8080/ad/advertiser/ad_info.jsp
+ssh -i brandbox.pem root@125.209.192.147 -p 3022
+root/tmshdnxmfl
+
+ #rpm -qa *-release
+ centos-release-6-6.el6.centos.12.2.x86_64
+ 
+ 

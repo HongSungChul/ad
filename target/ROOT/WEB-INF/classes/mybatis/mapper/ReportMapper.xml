@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbagix.ad.mapper.ReportMapper">
+		
+    <!-- ////////dailyAc/////////////// -->
+     
+    
+    <insert id="addDailyAc" parameterType="map">
+        INSERT INTO `brandbox`.`dailyAc`
+		(`memberSq`,
+		`collDate`,
+		`clickCnt`,
+		`validCnt`,
+		`invalidCnt`,
+		`reqCnt`,
+		`viewCnt`,
+		`avgPrice`,
+		`sales`,
+		`admSq`,
+		`regDate`,
+		`prevPoint`,
+		`point`)
+		VALUES
+		(#{memberSq},
+		#{collDate},
+		#{clickCnt},
+		#{validCnt},
+		#{invalidCnt},
+		#{reqCnt},
+		#{viewCnt},
+		#{avgPrice},
+		#{sales},
+		#{admSq},
+		now(),
+		#{prevPoint},
+		#{point}
+		)
+
+		
+	</insert>
+	<select id="getDailyAc" resultType="map" parameterType="map">
+        select 
+        	* from dailyAc
+        WHERE memberSq=#{memberSq}
+        	and collDate=#{collDate}
+        	and admSq=#{admSq}
+        
+         
+    </select>
+    
+    <select id="getTotalDailyAc" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   dailyAc where 1=1
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+    </select>
+    <select id="getDailyAcGroupByDate" resultType="map" parameterType="map">
+        select 
+			collDate,sum(clickCnt) clickCnt,
+			sum(validCnt) validCnt,
+			sum(invalidCnt) invalidCnt,
+			sum(reqCnt) reqCnt,
+			sum(viewCnt) viewCnt,
+			avg(avgPrice) avgPrice,
+			sum(sales) sales
+        FROM   dailyAc A where 1=1
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+		group by collDate
+    </select>
+    <select id="getMonthAcGroupByDate" resultType="map" parameterType="map">
+        select 
+			collDate,sum(clickCnt) clickCnt,
+			sum(validCnt) validCnt,
+			sum(invalidCnt) invalidCnt,
+			sum(reqCnt) reqCnt,
+			sum(viewCnt) viewCnt,
+			sum(sales) sales
+        FROM   monthAc A where 1=1
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+		group by collDate
+    </select>
+    <select id="getDailyAcGroupByAdm" resultType="map" parameterType="map">
+        select 
+			admSq,sum(clickCnt) clickCnt,
+			sum(validCnt) validCnt,
+			sum(invalidCnt) invalidCnt,
+			sum(reqCnt) reqCnt,
+			sum(viewCnt) viewCnt,
+			avg(avgPrice) avgPrice,
+			sum(sales) sales
+        FROM   dailyAc A where 1=1
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+		<if test=" admSq != null and admSq != '' ">
+		  and admSq=#{admSq}
+		</if>
+		group by admSq
+    </select>
+    <select id="getDailyAcByClick" parameterType="map" resultType="map">
+         select 
+			admSq,date(regDate) collDate,count(*) clickCnt,count(*) validCnt , 0 reqCnt,
+			avg(point) avgPrice,sum(point) sales,admSq
+		from click where  admSq=#{admSq} 
+			and date(regDate)=#{collDate} 
+			<if test=" check != null and check != '' ">
+				and check=#{check}
+			</if>
+		group by date(regDate),admSq
+
+    </select>
+    <select id="getDailyAcByView" parameterType="map" resultType="map">
+         select 
+			admSq,date(regDate) collDate,count(*) viewCnt
+		from view where  admSq=#{admSq} 
+			and date(regDate)=#{collDate}
+		group by date(regDate),admSq
+
+    </select>
+    <select id="getAllDailyAc" parameterType="map" resultType="map">
+         select 
+        	*  from dailyAc A
+		where 1=1
+      
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        <choose>
+		    <when test=" memberSq != null and memberSq != '' ">
+		      and memberSq=#{memberSq}
+		      order by A.regDate desc
+		    </when>
+		    
+		    <otherwise>
+		      order by A.regDate desc
+		    </otherwise>
+		</choose>
+		  
+			
+		<if test=" start != null and start != '' ">
+       		limit #{start} ,#{length}
+      	 </if>
+    </select>
+ 	<select id="getTotalDailyAcByCollDate" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   dailyAc where 1=1
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+		    
+    </select>
+    
+    
+    <select id="getAllDailyAcByCollDate" parameterType="map" resultType="map">
+        select 
+        	*  from dailyAc A
+		where 1=1
+      
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        <choose>
+		    <when test=" memberSq != null and memberSq != '' ">
+		      and memberSq=#{memberSq}
+		      order by A.regDate desc
+		    </when>
+		    
+		    <otherwise>
+		      order by A.regDate desc
+		    </otherwise>
+		</choose>
+		  
+		group by collDate	
+		<if test=" start != null and start != '' ">
+       		limit #{start} ,#{length}
+      	 </if>
+    </select>	
+    
+    <delete id="deleteDailyAc" parameterType="map">
+        delete from dailyAc WHERE  memberSq=#{memberSq}
+        	and collDate=#{collDate}
+        	and admSq=#{admSq}
+        	
+        
+    </delete>
+    
+    <!-- ////////dailyMc/////////////// -->
+     
+    
+    <insert id="addDailyMc" parameterType="map">
+       INSERT INTO `brandbox`.`dailyMc`
+		(`memberSq`,
+		`collDate`,
+		`clickCnt`,
+		`validCnt`,
+		`invalidCnt`,
+		`reqCnt`,
+		`viewCnt`,
+		`avgPrice`,
+		`sales`,
+		`adUnitSq`,
+		`regDate`,
+		`serviceSq`)
+		VALUES
+		(#{memberSq},
+		#{collDate},
+		#{clickCnt},
+		#{validCnt},
+		#{invalidCnt},
+		#{reqCnt},
+		#{viewCnt},
+		#{avgPrice},
+		#{sales},
+		#{adUnitSq},
+		now(),
+		#{serviceSq});
+
+
+		
+	</insert>
+	<select id="getDailyMc" resultType="map" parameterType="map">
+        select 
+        	* from dailyMc
+        WHERE memberSq=#{memberSq}
+        	and collDate=#{collDate}
+        	and adUnitSq=#{adUnitSq}
+        
+         
+    </select>
+    
+    <select id="getTotalDailyMc" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   dailyMc where 1=1
+         <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+    </select>
+    <select id="getDailyMcGroupByDate" resultType="map" parameterType="map">
+        select 
+			collDate,sum(clickCnt) clickCnt,
+			sum(validCnt) validCnt,
+			sum(invalidCnt) invalidCnt,
+			sum(reqCnt) reqCnt,
+			sum(viewCnt) viewCnt,
+			avg(avgPrice) avgPrice,
+			sum(sales) sales
+        FROM   dailyMc A where 1=1
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+		group by collDate
+    </select>
+    <select id="getDailyMcByClick" parameterType="map" resultType="map">
+         select 
+			adUnitSq,date(regDate) collDate,count(*) clickCnt,count(*) validCnt , 0 reqCnt,
+			avg(point) avgPrice,sum(point) sales,admSq
+		from click where  adUnitSq=#{adUnitSq} 
+			and date(regDate)=#{collDate} 
+			<if test=" check != null and check != '' ">
+				and check=#{check}
+			</if>
+		group by date(regDate),adUnitSq
+
+    </select>
+    <select id="getDailyMcByView" parameterType="map" resultType="map">
+         select 
+			adUnitSq,date(regDate) collDate,count(*) viewCnt
+		from view where  adUnitSq=#{adUnitSq} 
+			and date(regDate)=#{collDate}
+		group by date(regDate),adUnitSq
+
+    </select>
+    <select id="getAllDailyMc" parameterType="map" resultType="map">
+         select 
+        	*  from dailyMc A
+		where 1=1
+      
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        <choose>
+		    <when test=" memberSq != null and memberSq != '' ">
+		      and memberSq=#{memberSq}
+		      order by A.regDate desc
+		    </when>
+		    
+		    <otherwise>
+		      order by A.regDate desc
+		    </otherwise>
+		</choose>
+		  
+			
+		<if test=" start != null and start != '' ">
+       		limit #{start} ,#{length}
+      	 </if>
+    </select>
+    
+    <select id="getTotalDailyMcByCollDate" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   dailyMc where 1=1
+         <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+    </select>
+    <select id="getAllDailyMcByCollDate" parameterType="map" resultType="map">
+         select 
+        	*  from dailyMc A
+		where 1=1
+      
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        <choose>
+		    <when test=" memberSq != null and memberSq != '' ">
+		      and memberSq=#{memberSq}
+		      order by A.regDate desc
+		    </when>
+		    
+		    <otherwise>
+		      order by A.regDate desc
+		    </otherwise>
+		</choose>
+		  
+			
+		<if test=" start != null and start != '' ">
+       		limit #{start} ,#{length}
+      	 </if>
+    </select>
+    <delete id="deleteDailyMc" parameterType="map">
+        delete from dailyMc WHERE  memberSq=#{memberSq}
+        	and collDate=#{collDate}
+        	and adUnitSq=#{adUnitSq}
+    </delete>
+    
+    
+    <!-- ////////dailyKw/////////////// -->
+     
+    
+    <insert id="addDailyKw" parameterType="map">
+       INSERT INTO `brandbox`.`dailyKw`
+		(`kw1Sq`,
+		`collDate`,
+		`clickCnt`,
+		`validCnt`,
+		`invalidCnt`,
+		`reqCnt`,
+		`viewCnt`,
+		`avgPrice`,
+		`sales`,
+		`regDate`,
+		`advertiserCnt`,`kw1Name`)
+		VALUES
+		(#{kw1Sq},
+		#{collDate},
+		#{clickCnt},
+		#{validCnt},
+		#{invalidCnt},
+		#{reqCnt},
+		#{viewCnt},
+		#{avgPrice},
+		#{sales},
+		now(),
+		#{advertiserCnt},
+		#{kw1Name});
+		
+	</insert>
+	<select id="getDailyKw" resultType="map" parameterType="map">
+        select 
+        	* from dailyKw
+        WHERE kw1Sq=#{kw1Sq}
+        	and collDate=#{collDate}
+         
+    </select>
+    
+    <select id="getTotalDailyKw" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   dailyKw where 1=1
+         <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        
+		<if test=" kw1Sq != null and kw1Sq != '' ">
+		  and kw1Sq=#{kw1Sq}
+		</if>
+    </select>
+    <select id="getDailyKwGroupByDate" resultType="map" parameterType="map">
+        select 
+			kw1Sq,sum(clickCnt) clickCnt,
+			sum(validCnt) validCnt,
+			sum(invalidCnt) invalidCnt,
+			sum(reqCnt) reqCnt,
+			sum(viewCnt) viewCnt,
+			avg(avgPrice) avgPrice,
+			sum(sales) sales
+        FROM   dailyKw A where 1=1
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+		<if test=" memberSq != null and memberSq != '' ">
+		  and kw1Sq=#{kw1Sq}
+		</if>
+		group by kw1Sq
+    </select>
+    <select id="getAllDailyKw" parameterType="map" resultType="map">
+         select 
+        	*  from dailyKw A
+		where 1=1
+      
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        <choose>
+		    <when test=" kw1Sq != null and kw1Sq != '' ">
+		      and kw1Sq=#{kw1Sq}
+		      order by A.regDate desc
+		    </when>
+		    
+		    <otherwise>
+		      order by A.regDate desc
+		    </otherwise>
+		</choose>
+		  
+			
+		<if test=" start != null and start != '' ">
+       		limit ${start} ,${length}
+      	 </if>
+    </select>
+    <select id="getDailyKwByClick" parameterType="map" resultType="map">
+         select 
+			admSq,date(regDate) collDate,count(*) clickCnt,count(*) validCnt , 0 reqCnt,
+			avg(point) avgPrice,sum(point) sales,kw1Sq
+		from click where  kw1Sq=#{kw1Sq} 
+			and date(regDate)=#{collDate}
+		group by date(regDate),kw1Sq
+
+    </select>
+    <select id="getAdvertiserCountByKw" parameterType="map" resultType="java.lang.Integer">
+         select count(*) from bidding 
+         	where  kw1Sq=#{kw1Sq}
+    </select>
+    <select id="getDailyKwByView" parameterType="map" resultType="map">
+         select 
+			admSq,date(regDate) collDate,count(*) viewCnt
+		from view where  kw1Sq=#{kw1Sq} 
+			and date(regDate)=#{collDate}
+		group by date(regDate),kw1Sq
+
+    </select>
+    <delete id="deleteDailyKw" parameterType="map">
+        delete from dailyKw WHERE  kw1Sq=#{kw1Sq}
+        	and collDate=#{collDate}
+        	
+    </delete>
+    
+    
+     <!-- ////////monthAc/////////////// -->
+     
+    <insert id="addMonthAc" parameterType="map">
+        INSERT INTO `brandbox`.`monthAc`
+		(`memberSq`,
+		`collDate`,
+		`clickCnt`,
+		`validCnt`,
+		`invalidCnt`,
+		`reqCnt`,
+		`viewCnt`,
+		`sales`,
+		`prevPoint`,
+		`point`,
+		`bonus`,
+		`regDate`)
+		VALUES
+		(#{memberSq},
+		#{collDate},
+		#{clickCnt},
+		#{validCnt},
+		#{invalidCnt},
+		#{reqCnt},
+		#{viewCnt},
+		#{sales},
+		#{prevPoint},
+		#{point},
+		#{bonus},
+		now());
+
+
+		
+	</insert>
+	<select id="getMonthAc" resultType="map" parameterType="map">
+        select 
+        	* from monthAc
+        WHERE memberSq=#{memberSq}
+        	and collDate=#{collDate}
+        	
+         
+    </select>
+    
+    <select id="getTotalMonthAc" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   monthAc where 1=1
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+		    
+    </select>
+    
+    
+    <select id="getAllMonthAc" parameterType="map" resultType="map">
+         select 
+        	*  from monthAc A
+		where 1=1
+      
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        <choose>
+		    <when test=" memberSq != null and memberSq != '' ">
+		      and memberSq=#{memberSq}
+		      order by A.regDate desc
+		    </when>
+		    
+		    <otherwise>
+		      order by A.regDate desc
+		    </otherwise>
+		</choose>
+		  
+			
+		<if test=" start != null and start != '' ">
+       		limit #{start} ,#{length}
+      	 </if>
+    </select>
+ 		
+    
+    <delete id="deleteMonthAc" parameterType="map">
+        delete from monthAc WHERE  memberSq=#{memberSq}
+        	and collDate=#{collDate}
+        	
+        
+    </delete>
+    
+    
+     <!-- ////////monthMc/////////////// -->
+     
+    
+    <insert id="addMonthMc" parameterType="map">
+       INSERT INTO `brandbox`.`monthMc`
+(`memberSq`,
+`collDate`,
+`clickCnt`,
+`validCnt`,
+`invalidCnt`,
+`reqCnt`,
+`viewCnt`,
+`avgPrice`,
+`sales`,
+`regDate`)
+VALUES
+(#{memberSq},
+#{collDate},
+#{clickCnt},
+#{validCnt},
+#{invalidCnt},
+#{reqCnt},
+#{viewCnt},
+#{avgPrice},
+#{sales},
+now());
+
+
+
+
+		
+	</insert>
+	<select id="getMonthMc" resultType="map" parameterType="map">
+        select 
+        	* from monthMc
+        WHERE memberSq=#{memberSq}
+        	and collDate=#{collDate}
+        	
+         
+    </select>
+    
+    <select id="getTotalMonthMc" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   monthMc where 1=1
+         <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        
+		<if test=" memberSq != null and memberSq != '' ">
+		  and memberSq=#{memberSq}
+		</if>
+    </select>
+    <select id="getAllMonthMc" parameterType="map" resultType="map">
+         select 
+        	*  from monthMc A
+		where 1=1
+      
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and collDate >= #{startDate}]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and collDate <= #{endDate}]]>
+        </if>
+        <choose>
+		    <when test=" memberSq != null and memberSq != '' ">
+		      and memberSq=#{memberSq}
+		      order by A.regDate desc
+		    </when>
+		    
+		    <otherwise>
+		      order by A.regDate desc
+		    </otherwise>
+		</choose>
+		  
+			
+		<if test=" start != null and start != '' ">
+       		limit #{start} ,#{length}
+      	 </if>
+    </select>
+    
+    <delete id="deleteMonthMc" parameterType="map">
+        delete from monthAc WHERE  memberSq=#{memberSq}
+        	and collDate=#{collDate}
+        	
+        
+    </delete>
+</mapper>

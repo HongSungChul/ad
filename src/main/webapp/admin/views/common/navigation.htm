@@ -1,0 +1,68 @@
+<!-- Navigation -->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul side-navigation class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+
+	                <div class="dropdown profile-element" dropdown>
+	                    <a class="dropdown-toggle" dropdown-toggle href>
+	                            <span class="clear">
+	                                <span class="block m-t-xs">
+	                                    <strong class="font-bold">{{userid}}</strong>
+	                             </span>
+	                            
+	                    </a>
+	                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+	                        <li><a href="">Logout</a></li>
+	                    </ul>
+	                </div>
+	                <div class="logo-element">
+	                    브랜드박스
+	                </div>
+	
+	            </li>
+                <li ng-class="{'active':url=='adm'}">
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">광고관리</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="adm.jsp?#adm">광고물 현황</a></li>
+                        <li><a href="adm_req.jsp?#/amdReq">광고물 심사</a></li>
+                        <li><a href="category.jsp">카테고리관리</a></li>
+                        <li><a href="keyword.jsp">키워드관리</a></li>
+                        <li><a href="word_site.jsp?#list">유입경로가중치</a></li>
+                    </ul>
+                </li>
+                <li ng-class="{'active':url=='adm'}">
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">정산관리</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="point_log.jsp?#point_log">포인트관리</a></li>
+                        <li><a href="fill_log.jsp?#fill_log">예치금결제 내역 </a></li>
+                        <li><a href="calculation.jsp">월별정산내역</a></li>
+                    </ul>
+                </li>
+                <li ng-class="{'active':url=='adm'}">
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">계정관리</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="advertiser_user.jsp?#advertiser_user">광고주관리</a></li>
+						<li><a href="media_user.jsp?#media_user">매체관리</a></li>
+                        <li><a href="ad_unit.jsp?#ad_unit">광고코드관리</a></li> 
+                    </ul>
+                </li>
+                <li ng-class="{'active':url=='adm'}">
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">보고서</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="report_period.jsp?#report_period">기간별 집행보고</a></li>
+                        <li><a href="report_advertiser.jsp?#report_ad">광고주현황</a></li>
+                        <li><a href="report_media.jsp?#report_ad">매체사현황</a></li>
+                        <li><a href="report_keyword.jsp?#report_ad">키워드현황</a></li>
+                    </ul>
+                </li>
+                <li ng-class="{'active':url=='adm'}">
+                    <a href="code_tbl.jsp?#list"><i class="fa fa-th-large"></i> <span class="nav-label">코드관리</span> <span class="fa arrow"></span></a>
+                    
+                </li>
+                
+                
+            </ul>
+
+        </div>
+    </nav>

@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbagix.ad.mapper.AdmMapper">
+	<select id="getAllAdmTitle" parameterType="map" resultType="map">
+        SELECT  title,admSq
+        FROM   adm A
+		where
+			admSq in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+      		 #{item.admSq}
+     	</foreach>
+    
+    </select>	
+    <!-- /////////////ad_info////////// -->
+    <insert id="addAdm" parameterType="map" useGeneratedKeys="true" keyProperty="admSq">
+        INSERT INTO adm
+		(
+		 memberSq,
+		 imgUri,
+		 title,
+		 description,
+	 	 link,
+		 regDate,
+		 modDate,
+		 alias
+		)
+		VALUES
+		(
+			#{memberSq},
+		 #{imgUri},
+		 #{title},
+		 #{description},
+	 	 #{link},
+		 now(),
+		 now(),
+		 #{alias}
+		)
+
+		
+	</insert>
+		
+    <select id="getTotalAdm" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   adm where 1=1
+         <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" admSq != null and admSq != '' ">
+        	and admSq=#{admSq}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+    </select>
+    
+    
+    <select id="getAllAdm" parameterType="map" resultType="map">
+         select 
+        	*,
+        	(select 'A' from bidding where admSq=A.admSq) statusName  from adm A
+		where 1=1
+        <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" admSq != null and admSq != '' ">
+        	and admSq=#{admSq}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+			order by A.admSq desc
+		<if test=" start != null and start != '' ">
+       		limit ${start} ,${length}
+      	 </if>
+    </select>
+ 
+    <select id="getAdm" resultType="map" parameterType="map">
+        select 
+        	* from adm
+        WHERE   admSq = #{admSq}
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+         
+    </select>
+     
+    <update id="updateAdm" parameterType="map">
+        UPDATE adm
+		SET
+		  imgUri = #{imgUri},
+		 title= #{title},
+		 description= #{description},
+	 	 link= #{link},
+		 modDate=now(),
+		 alias=#{alias}
+        WHERE  admSq = #{admSq}
+        
+        
+    </update>
+     
+    
+    <delete id="deleteAdm" parameterType="map">
+        delete from adm WHERE  admSq = #{admSq}
+         <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+    </delete>
+    <select id="getAllAdmKw" parameterType="map" resultType="map">
+         select 
+        	A.*,
+			(select name from kw1 where kw1Sq=A.kw1Sq) kw1Name,
+			(select name from kw2 where kw2Sq=A.kw2Sq) kw2Name,
+			(select kind from kw2 where kw2Sq=A.kw2Sq) kind
+  		from admKw A
+		where 1=1
+       
+        <if test=" admSq != null and admSq != '' ">
+        	and A.admSq=#{admSq}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and A.memberSq=#{memberSq}
+        </if>
+		
+    </select>
+    <insert id="addAdmKw" parameterType="map">
+        INSERT INTO admKw
+		(
+			admSq,
+			kw1Sq,
+			kw2Sq,
+			regDate,
+			modDate,
+			memberSq
+		)
+		VALUES
+		(
+			#{admSq},
+			#{kw1Sq},
+			#{kw2Sq},
+			now(),
+			now(),
+			#{memberSq}
+		)
+
+		
+	</insert>
+   
+   
+   <insert id="addBidding" parameterType="map">
+        INSERT INTO bidding
+		(
+		 admSq,
+		 kw1Sq,
+		 kw2Sq,
+		 memberSq,
+	 	 point,
+		 regDate,
+		 modDate
+		)
+		VALUES
+		(
+		 #{admSq},
+		 #{kw1Sq},
+		 #{kw2Sq},
+		 #{memberSq},
+	 	 #{point},
+		 now(),
+		 now()
+		)
+	</insert>
+	
+	<select id="getAllBiddingByPoint" resultType="map" parameterType="map">
+        SELECT  *
+        FROM   bidding where 1=1
+         <if test=" kw1Sq != null and kw1Sq != '' ">
+        	and kw1Sq=#{kw1Sq}
+        </if>
+        <if test=" kw2Sq != null and kw2Sq != '' ">
+        	and kw2Sq=#{kw2Sq}
+        </if>
+        <if test=" admSq != null and admSq != '' ">
+        	and admSq=#{admSq}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+        order by point desc, regDate desc
+    </select>
+    <select id="getAllBidding" resultType="map" parameterType="map">
+        select A.*,
+			(select title from adm where admSq=A.admSq) title,
+			(select name from kw1 where kw1Sq=A.kw1Sq) kw1Name,
+			(select name from kw2 where kw2Sq=A.kw2Sq) kw2Name
+		 from bidding A where 1=1
+         <if test=" kw1Sq != null and kw1Sq != '' ">
+        	and A.kw1Sq=#{kw1Sq}
+        </if>
+        <if test=" kw2Sq != null and kw2Sq != '' ">
+        	and A.kw2Sq=#{kw2Sq}
+        </if>
+        <if test=" admSq != null and admSq != '' ">
+        	and A.admSq=#{admSq}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and A.memberSq=#{memberSq}
+        </if>
+        order by A.regDate desc
+    </select>
+    
+    <select id="getTotalBidding" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   bidding where 1=1
+         <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" admSq != null and admSq != '' ">
+        	and admSq=#{admSq}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+    </select>
+    <delete id="deleteBidding" parameterType="map">
+        delete from bidding WHERE  admSq = #{admSq}
+         	and kw1Sq=#{kw1Sq}
+         	and kw2Sq=#{kw2Sq}
+        
+    </delete>
+    
+    <!--  advertising -->
+    <insert id="addAdvertising" parameterType="map">
+    
+        INSERT INTO `brandbox`.`advertising`
+		(`admSq`,
+		`kw1Sq`,
+		`kw2Sq`,
+		`point`,
+		`memberSq`,
+		`sortOrder`,
+		`imgUri`,
+		`title`,
+		`description`,
+		`link`,
+		`kw1Name`,
+		`regDate`,
+		`modDate`,
+		`kw2Name`,`price`,`kind`)
+		VALUES
+		(#{admSq},
+		#{kw1Sq},
+		#{kw2Sq},
+		#{point},
+		#{memberSq},
+		#{sortOrder},
+		#{imgUri},
+		#{title},
+		#{description},
+		#{link},
+		#{kw1Name},
+		now(),
+		now(),
+		#{kw2Name},#{price},#{kind})
+
+
+		
+	</insert>
+		
+    <select id="getTotalAdvertising" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   advertising where 1=1
+         <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" admSq != null and admSq != '' ">
+        	and admSq=#{admSq}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+        <if test=" kw1Sq != null and kw1Sq != '' ">
+        	and kw1Sq=#{kw1Sq}
+        </if>
+        <if test=" kw2Sq != null and kw2Sq != '' ">	
+         	and kw2Sq=#{kw2Sq}
+         </if>	
+    </select>
+    
+    
+    <select id="getAllAdvertising" parameterType="map" resultType="map">
+         select 
+        	*  from advertising A
+		where 1=1
+        <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" kw1Name != null and kw1Name != '' ">
+        	and kw1Name=#{kw1Name}
+        </if>
+        <if test=" kind != null and kind != '' ">
+        	and kind=#{kind}
+        </if>
+        <if test=" admSq != null and admSq != '' ">
+        	and admSq=#{admSq}
+        </if>
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+         <if test=" kw1Sq != null and kw1Sq != '' ">
+        	and kw1Sq=#{kw1Sq}
+        </if>
+        <if test=" kw2Sq != null and kw2Sq != '' ">	
+         	and kw2Sq=#{kw2Sq}
+         </if>	
+			order by A.regDate desc
+		<if test=" start != null and start != '' ">
+       		limit ${start} ,${length}
+      	 </if>
+    </select>
+ 
+    <select id="getAdvertising" resultType="map" parameterType="map">
+        select 
+        	* from advertising
+        WHERE   admSq = #{admSq}
+        <if test=" kw1Sq != null and kw1Sq != '' ">
+        	and kw1Sq=#{kw1Sq}
+        </if>
+        <if test=" kw2Sq != null and kw2Sq != '' ">	
+         	and kw2Sq=#{kw2Sq}
+         </if>	
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+         
+    </select>
+     
+    <update id="updateAdvertising" parameterType="map">
+        UPDATE advertising
+		SET
+		  imgUri = #{imgUri},
+		 title= #{title},
+		 description= #{description},
+	 	 link= #{link},
+		 modDate=now(),
+		 alias=#{alias}
+        WHERE  admSq = #{admSq}
+        and kw1Sq=#{kw1Sq}
+        and kw2Sq=#{kw2Sq}
+        
+        
+    </update>
+     
+    
+    <delete id="deleteAdvertising" parameterType="map">
+        delete from advertising WHERE  1=1
+		<if test=" admSq != null and admSq != '' ">
+			and admSq = #{admSq}
+		</if>
+        and kw1Sq=#{kw1Sq}
+        and kw2Sq=#{kw2Sq}
+       
+    </delete>
+    
+    <!--  click -->
+    
+     <insert id="addClick" parameterType="map">
+    
+       INSERT INTO `brandbox`.`click`
+		(
+		`kw1Sq`,
+		`kw2Sq`,
+		`admSq`,
+		`adUnitSq`,
+		`point`,
+		`ip`,
+		`referer`,
+		`regDate`,
+		`check`,`requestSq`,`adUid`)
+		VALUES
+		(
+		#{kw1Sq},
+		#{kw2Sq},
+		#{admSq},
+		#{adUnitSq},
+		#{point},
+		#{ip},
+		#{referer},
+		now(),
+		'A',#{requestSq},#{adUid}
+		)
+
+
+	</insert>
+	<select id="getAllClick" parameterType="map" resultType="map">
+         select 
+        	*  from click A
+		where 1=1
+       
+        <if test=" adUnitSq != null and adUnitSq != '' ">
+        	and adUnitSq=#{adUnitSq}
+        </if>
+        
+        <if test=" admSq != null and admSq != '' ">
+        	and admSq=#{admSq}
+        </if>
+        
+         <if test=" kw1Sq != null and kw1Sq != '' ">
+        	and kw1Sq=#{kw1Sq}
+        </if>
+        <if test=" kw2Sq != null and kw2Sq != '' ">	
+         	and kw2Sq=#{kw2Sq}
+         </if>
+         <if test=" check != null and check != '' ">
+        	and check=#{check}
+        </if>
+         <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and date(regDate) >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and date(regDate) <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')]]>
+        </if>	
+		<if test=" start != null and start != '' ">
+       		limit ${start} ,${length}
+      	 </if>
+    </select>
+	<update id="updateClick" parameterType="map">
+        UPDATE click
+		SET
+		  check=#{check}
+		WHERE  clickSq = #{clickSq}
+        
+    </update>
+    
+    <select id="getPointByDate" resultType="java.math.BigDecimal" parameterType="map">
+        SELECT  sum(point) total
+        FROM   click where 
+		admSq in(select admSq from adm where memberSq=#{memberSq})
+        and date(regDate)= STR_TO_DATE(#{regDate}, '%Y-%m-%d')
+        <if test=" status != null and status != '' ">	
+         	and status=#{status}
+         </if>	
+    </select>
+    <!-- view -->
+    
+    <insert id="addView" parameterType="map">
+    INSERT INTO `brandbox`.`view`
+		(
+		`kw1Sq`,
+		`kw2Sq`,
+		`admSq`,
+		`adUnitSq`,
+		`ip`,
+		`referer`,
+		`regDate`,`requestSq`,`adUid`)
+		VALUES
+		(
+		#{kw1Sq},
+		#{kw2Sq},
+		#{admSq},
+		#{adUnitSq},
+		#{ip},
+		#{referer},
+		now(),#{requestSq},#{adUid})
+
+
+
+	</insert>
+	<select id="getClickRecentCount" resultType="java.lang.Integer" parameterType="map">
+	<![CDATA[ 
+        SELECT  count(*) cnt
+        FROM   click  where
+        	 admSq=#{admSq}
+        	and kw1Sq=#{kw1Sq}
+        	and kw2Sq=#{kw2Sq}
+        	and ip=#{ip}
+        	and regDate > (NOW() - INTERVAL 10 MINUTE)
+        ]]>
+    </select>
+      <insert id="addWordUser" parameterType="map" >
+    	INSERT INTO `brandbox`.`wordUser`
+		(`adUid`,
+		`word`,
+		`weight`,
+		`regDate`)
+		VALUES
+		(#{adUid},
+		#{word},
+		#{weight},
+		now());
+    </insert>
+    <!-- request(광고요청) -->
+    <insert id="addRequest" parameterType="map" useGeneratedKeys="true" keyProperty="requestSq">
+        INSERT INTO `brandbox`.`request`
+		(
+		`query`,
+		`admSq`,
+		`adUnitSq`,
+		`sessionId`,
+		`kw1Sq`,
+		`regDate`,
+		`ip`,
+		`referer`,`adUid`,`originHost`)
+		VALUES
+		(
+		#{query},
+		#{admSq},
+		#{adUnitSq},
+		#{sessionId},
+		#{kw1Sq},
+		now(),
+		#{ip},
+		#{referer},#{adUid},#{originHost})
+
+		
+	</insert>
+	<select id="getAllRequest" parameterType="map" resultType="map">
+         select *  from request A
+		
+        	where adUid=#{adUid}
+        	<if test=" regDate != null and regDate != '' ">
+       			and date(regDate)= STR_TO_DATE(#{regDate}, '%Y-%m-%d')
+        	</if>
+       		order by A.regDate desc
+       		<if test=" start != null and start != '' ">
+       			limit ${start} ,${length}
+       		</if>
+      	
+    </select>
+    <select id="getAllAdUid" parameterType="map" resultType="map">
+         select distinct adUid  from request A where adUid is not null
+			<if test=" regDate != null and regDate != '' ">
+       			and date(regDate)= STR_TO_DATE(#{regDate}, '%Y-%m-%d')
+        	</if>
+       		<if test=" start != null and start != '' ">
+       			limit ${start} ,${length}
+       		</if>
+      	
+    </select>
+    
+    <select id="getAllWordUser" parameterType="map" resultType="map">
+         select *  from wordUser A
+        	where adUid=#{adUid}
+       		order by A.weight desc
+       		
+    </select>
+    <insert id="addWordSite" parameterType="map" useGeneratedKeys="true" keyProperty="wordSiteSq">
+    INSERT INTO `brandbox`.`wordSite`
+		(
+		`domain`,
+		`word`,
+		`regDate`)
+		VALUES (
+		#{domain},
+		#{word},
+		now())
+    </insert>
+    <select id="getAllWordSite" parameterType="map" resultType="map">
+         select *  from wordSite A
+         where 1=1
+         	<if test=" domain != null and domain != '' ">
+        	and domain=#{domain}
+        	</if>
+        	order by A.regDate desc
+       		<if test=" start != null and start != '' ">
+       			limit ${start} ,${length}
+       		</if>
+      	
+    </select>
+    <select id="getWordSite" resultType="map" parameterType="map">
+        select 
+        	* from wordSite
+        WHERE   wordSiteSq = #{wordSiteSq}
+         
+    </select>
+   
+    <delete id="deleteWordSite" parameterType="map">
+         delete  from wordSite
+        	where wordSiteSq=#{wordSiteSq}
+    </delete>
+     <delete id="deleteWordUser" parameterType="map">
+         delete  from wordUser
+        	where adUid=#{adUid}
+    </delete>
+</mapper>

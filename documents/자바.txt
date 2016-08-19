@@ -1,0 +1,3 @@
+ #yum list java*jdk-devel => 버젼확인 
+ #yum install java-1.8.0-openjdk-devel.x86_64 => 설치
+ #rpm -qa java*jdk-devel => 설치확인

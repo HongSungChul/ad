@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbagix.ad.mapper.PointMapper">
+		
+    <!-- /////////////////////// -->
+     <update id="moveToAdPoint" parameterType="map">
+        UPDATE member
+		SET
+			adPoint=point
+        WHERE  memberSq = #{memberSq}
+        	
+    </update>
+    <insert id="addPoint" parameterType="map">
+    	update member set point=point+#{point},modDate=now()
+    	where memberSq=#{memberSq}
+    </insert>
+    <insert id="usePoint" parameterType="map">
+    	update member set point=point-#{point},modDate=now()
+    	where memberSq=#{memberSq}
+    </insert>
+    
+    <insert id="useAdPoint" parameterType="map">
+    	update member set adPoint=adPoint-#{point},modDate=now()
+    	where memberSq=#{memberSq}
+    </insert>
+    
+    
+    <insert id="addPointLog" parameterType="map" useGeneratedKeys="true" keyProperty="pointLogSq">
+        INSERT INTO `brandbox`.`pointLog`
+			(
+			`point`,
+			`kind`,
+			`memberSq`,
+			`description`,
+			`regDate`,
+			`gubun`)
+			VALUES
+			(
+			#{point},
+			#{kind},
+			#{memberSq},
+			#{description},
+			now(),
+			#{gubun})
+		
+	</insert>
+	<select id="getPointLog" resultType="map" parameterType="map">
+        select 
+        	* from pointLog
+        WHERE   1=1
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+        <if test=" regDate != null and regDate != '' ">	
+         	and date(regDate)= STR_TO_DATE(#{regDate}, '%Y-%m-%d')
+         </if>	
+        <if test=" gubun != null and bugun != '' ">
+        	and gubun=#{gubun}
+        </if>
+        <if test=" kind != null and kind != '' ">
+        	and kind=#{kind}
+        </if>
+         
+    </select>
+    <update id="updatePointLog" parameterType="map">
+        UPDATE pointLog
+		SET
+		  point=#{point},
+		  description=#{description}
+		WHERE  pointLogSq = #{pointLogSq}
+        
+    </update>
+    <select id="getTotalPointLog" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   pointLog where 1=1
+         <if test=" gubun != null and gubun != '' ">
+        	and gubun=#{gubun}
+        </if>
+        <if test=" kind != null and kind != '' ">
+        	and kind=#{kind}
+        </if>
+         <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and date(regDate) >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and date(regDate) <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')]]>
+        </if>
+    </select>
+    <select id="getSumPointLog" resultType="java.math.BigDecimal" parameterType="map">
+        SELECT  sum(point) point
+        FROM   pointLog where 1=1
+         <if test=" gubun != null and gubun != '' ">
+        	and gubun=#{gubun}
+        </if>
+        <if test=" kind != null and kind != '' ">
+        	and kind=#{kind}
+        </if>
+       
+        <if test=" memberSq != null and memberSq != '' ">
+        	and memberSq=#{memberSq}
+        </if>
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and date(regDate) >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and date(regDate) <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')]]>
+        </if>
+    </select>
+    
+    <select id="getAllPointLog" parameterType="map" resultType="map">
+         select 
+        	*  from pointLog A
+		where 1=1
+       <if test=" gubun != null and gubun != '' ">
+        	and gubun=#{gubun}
+        </if>
+        <if test=" kind != null and kind != '' ">
+        	and kind=#{kind}
+        </if>
+        <if test=" startDate != null and startDate != '' ">
+        	<![CDATA[ and date(regDate) >= STR_TO_DATE(#{startDate}, '%Y-%m-%d')]]>
+        </if>
+        <if test=" endDate != null and endDate != '' ">
+        	<![CDATA[ and date(regDate) <= STR_TO_DATE(#{endDate}, '%Y-%m-%d')]]>
+        </if>
+        <choose>
+		    <when test=" memberSq != null and memberSq != '' ">
+		      and memberSq=#{memberSq}
+		      order by A.regDate desc
+		    </when>
+		    
+		    <otherwise>
+		      order by A.regDate desc
+		    </otherwise>
+		</choose>
+		  
+			
+		<if test=" start != null and start != '' ">
+       		limit #{start} ,#{length}
+      	 </if>
+    </select>
+ 		
+    
+    
+    
+</mapper>

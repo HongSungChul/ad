@@ -1,0 +1,14 @@
+5==> mysql 데이타 베이스 생서 
+
+	#mysql
+	#create database bada0303
+
+
+
+CREATE USER 'bada0303'@'localhost' IDENTIFIED BY 'snowtree1012';
+GRANT ALL PRIVILEGES ON * . * TO 'bada0303'@'localhost';
+
+
+grant all privileges on bada0303.* to bada0303@'%' identified by 'snowtree1012' with grant option;
+
+ALTER DATABASE bada0303 CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'

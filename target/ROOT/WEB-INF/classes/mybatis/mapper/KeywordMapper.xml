@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbagix.ad.mapper.KeywordMapper">
+		
+    <!-- /////////////ad_info////////// -->
+    <insert id="addKw1" parameterType="map" useGeneratedKeys="true" keyProperty="kw1Sq">
+        INSERT INTO kw1
+		(
+		 cg2Sq,
+		 name,
+		 sortOrder,
+		 regDate,
+		 modDate,
+		 status,
+		 minBid
+		)
+		VALUES
+		(
+		 #{cg2Sq},
+		 #{name},
+		 #{sortOrder},
+		 now(),
+		 now(),
+	 	 #{status},
+	 	 #{minBid}
+		)
+
+		
+	</insert>
+		
+    <select id="getTotalKw1" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   kw1 where 1=1
+         <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" cg2Sq != null and cg2Sq != '' ">
+        	and cg2Sq=#{cg2Sq}
+        </if>
+       
+    </select>
+    
+    
+    <select id="getAllKw1" parameterType="map" resultType="map">
+         select 
+        	*  from kw1 A
+		where 1=1
+        <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" cg2Sq != null and cg2Sq != '' ">
+        	and cg2Sq=#{cg2Sq}
+        </if>
+        
+			order by A.sortOrder asc
+		<if test=" start != null and start != '' ">
+       		limit ${start} ,${length}
+      	 </if>
+    </select>
+ 
+    <select id="getKw1" resultType="map" parameterType="map">
+        select 
+        	* from kw1
+        WHERE   kw1Sq = #{kw1Sq}
+       
+         
+    </select>
+     
+    <update id="updateKw1" parameterType="map">
+        UPDATE kw1
+		SET
+		  name = #{name},
+		 sortOrder= #{sortOrder},
+		 status=#{status},
+		 modDate=now()
+        WHERE  kw1Sq = #{kw1Sq}
+        
+    </update>
+    <update id="upKw1" parameterType="map">
+        UPDATE kw1
+		SET
+		  sortOrder= sortOrder+1
+        WHERE  sortOrder >= #{sortOrder}
+        
+        
+    </update>
+    
+    <delete id="deleteKw1" parameterType="map">
+        delete from  kw1 WHERE  kw1Sq = #{kw1Sq}
+        
+    </delete>
+    
+    <!-- /////////////adm_req////////// -->
+    <insert id="addKw2" parameterType="map" useGeneratedKeys="true" keyProperty="kw2Sq">
+        INSERT INTO kw2
+		(
+		 name,
+		 sortOrder,
+		 regDate,
+		 modDate,
+		 status,
+		 kw1Sq,
+		 kind
+		)
+		VALUES
+		(
+		 #{name},
+		 #{sortOrder},
+		 now(),
+		 now(),
+	 	 #{status},
+	 	 #{kw1Sq},
+	 	 #{kind}
+		)
+
+		
+	</insert>
+		
+    <select id="getTotalKw2" resultType="java.lang.Integer" parameterType="map">
+        SELECT  count(*) cnt
+        FROM   kw2 where 1=1
+         <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" kw2Sq != null and kw2Sq != '' ">
+        	and kw2Sq=#{kw2Sq}
+        </if>
+        
+    </select>
+    
+    
+    <select id="getAllKw2" parameterType="map" resultType="map">
+         select 
+        	*  from kw2 A
+		where 1=1
+        <if test=" status != null and status != '' ">
+        	and status=#{status}
+        </if>
+        <if test=" kw1Sq != null and kw1Sq != '' ">
+        	and kw1Sq=#{kw1Sq}
+        </if>
+       
+			order by A.sortOrder asc
+		<if test=" start != null and start != '' ">
+       		limit ${start} ,${length}
+      	 </if>
+    </select>
+ 
+    <select id="getKw2" resultType="map" parameterType="map">
+        select 
+        	* from kw2
+        WHERE   kw2Sq = #{kw2Sq}
+        
+         
+    </select>
+     
+    <update id="updateKw2" parameterType="map">
+        UPDATE kw2
+		SET
+		 	name = #{name},
+		 sortOrder= #{sortOrder},
+		 status=#{status},
+		 modDate=now()
+        WHERE  kw2Sq = #{kw2Sq}
+        
+        
+    </update>
+     
+    
+    <delete id="deleteKw2" parameterType="map">
+        delete from kw2 WHERE  kw2Sq = #{kw2Sq}
+        
+    </delete>
+    <update id="upKw2" parameterType="map">
+        UPDATE kw2
+		SET
+		  sortOrder= sortOrder+1
+        WHERE  sortOrder >= #{sortOrder}
+        	and kw1Sq=#{kw1Sq}
+        
+        
+    </update>
+</mapper>

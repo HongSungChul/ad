@@ -1,0 +1,8 @@
+com.mbagix.ad
+com.mbagix.ad.controller
+com.mbagix.ad.filter
+com.mbagix.ad.mapper
+com.mbagix.ad.model
+com.mbagix.ad.runner
+com.mbagix.ad.service
+com.mbagix.ad.util
