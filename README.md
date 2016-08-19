@@ -500,13 +500,15 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
 			   	
 
 ```
+
 ## ERD
 
-	[ERD](./documents/erd.pdf)
+[ERD](./documents/erd.pdf)
   
 ## API  
 
-	[API](./doc/index.html)
+[API](./doc/index.html)
+
 ## Todo
 
 * mysql를 몽고디비로 포팅 
