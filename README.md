@@ -735,13 +735,13 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
 
 ## ERD
 
-	erd 이미지는  [ERD](./documents/brandbox.pdf) 에서 참조
+erd 이미지는  [ERD](./documents/brandbox.pdf) 에서 참조
 
-	erd 원본은  [ERD](./documents/brandbox.mwb) 에서 참조  
+erd 원본은  [ERD](./documents/brandbox.mwb) 에서 참조  
   
-## API  
+## API 
 
-	[API](https://htmlpreview.github.io/?https://github.com/HongSungChul/ad/blob/master/doc/index.html)
+[API](https://htmlpreview.github.io/?https://github.com/HongSungChul/ad/blob/master/doc/index.html)
 
 ## Todo
 
