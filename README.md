@@ -7,8 +7,8 @@
 - [개발환경](#개발환경)
 - [기능정의](#기능정의)
 - [프로세스](#프로세스)
-- [ERD](#ERD)
-- [API](#API)
+- [ERD](#erd)
+- [API](#api)
 - [Todo](#todo)
 
 ## 설치
@@ -729,13 +729,13 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
 ```
 
 
-## ERD
+## erd
 
-erd 이미지는  [ERD](./documents/brandbox.pdf) 에서 참조
+  [ERD 이미지](./documents/brandbox.pdf) 에서 참조
 
-erd 원본은  [ERD](./documents/brandbox.mwb) 에서 참조  
+  [ERD 원본](./documents/brandbox.mwb) 에서 참조  
   
-## API 
+## api 
 
 [API](https://htmlpreview.github.io/?https://github.com/HongSungChul/ad/blob/master/doc/index.html)
 
