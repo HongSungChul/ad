@@ -5,7 +5,6 @@
 
 - [설치](#설치)
 - [개발환경](#개발환경)
-- [소개](#소개)
 - [기능정의](#기능정의)
 - [프로세스](#프로세스)
 - [ERD](#ERD)
@@ -384,9 +383,6 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
 	</dependencies>
 ```	
 
-## 소개 
-
-브랜드 박스 소개
 
 ## 기능정의 
 ```sh 
