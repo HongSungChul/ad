@@ -503,7 +503,9 @@ ALTER DATABASE brandbox CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci'
 
 ## ERD
 
-[ERD](./documents/erd.pdf)
+erd 이미지는  [ERD](./documents/brandbox.pdf) 에서 참조
+
+erd 원본은  [ERD](./documents/brandbox.mwb) 에서 참조  
   
 ## API  
 
